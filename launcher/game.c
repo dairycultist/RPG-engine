@@ -29,7 +29,13 @@ void init_game(const char *game_data_path) {
 
 	while (fscanf(file, "%99s", flag) != EOF) {
 
-		if (strcmp(flag, "#DIALOGUE") == 0) {
+		if (strcmp(flag, "#COMMENT") == 0) {
+
+			fscanf(file, "\"%*[^\"]\"");
+
+		}else if (strcmp(flag, "#DIALOGUE") == 0) {
+
+			// #DIALOGUE <successor_index>:"<text>"
 
 			int successor_index;
 			char text[2048] = {};
@@ -38,14 +44,22 @@ void init_game(const char *game_data_path) {
 
 			states[i++] = create_dialogue_state(successor_index, text);
 
-		} else if (strcmp(flag, "#COMMENT") == 0) {
+		} else if (strcmp(flag, "#CHOICE") == 0) {
 
-			fscanf(file, "\"%*[^\"]\"");
+			// #CHOICE <choice_count> <succ_1>:"<text_1>" <succ_2>:"<text_2>" ...
 
+			int choice_count;
+
+			fscanf(file, "%u", &choice_count);
+
+			for (int choice = 0; choice < choice_count; choice++) {
+
+				fscanf(file, "%*u:\"%*2047[^\"]\"");
+			}
+
+			states[i++] = create_dialogue_state(2, "this should be a choice state but those aren't implemented yet!");
 		}
 	}
-
-	// #CHOICE 2 2:"Eat bacon!" 3:"Eat pancakes!"
 
 	fclose(file);
 }
