@@ -10,9 +10,11 @@ static SDL_Texture *screen_buffer;
 
 typedef enum {
 
-	GAME, GAME_PAUSED_ON_RESUME, GAME_PAUSED_ON_EDIT, GAME_PAUSED_ON_QUIT, EDITOR
+	MENU, GAME, PAUSED_ON_RESUME, PAUSED_ON_QUIT
 
 } WindowState;
+
+// TODO when first starting the program, enter a MENU state where you can choose between detected game data files
 
 static WindowState state = GAME;
 
@@ -91,11 +93,10 @@ int main() {
 						if (event.key.state == SDL_PRESSED) {
 
 							switch (state) {
-								case GAME: state = GAME_PAUSED_ON_RESUME; break;
-								case EDITOR: break;
-								case GAME_PAUSED_ON_RESUME:
-								case GAME_PAUSED_ON_EDIT:
-								case GAME_PAUSED_ON_QUIT: state = GAME; break;
+								case MENU: break;
+								case GAME: state = PAUSED_ON_RESUME; break;
+								case PAUSED_ON_RESUME:
+								case PAUSED_ON_QUIT: state = GAME; break;
 							}
 						}
 						break;
@@ -103,10 +104,12 @@ int main() {
 					case SDL_SCANCODE_UP:
 
 						if (event.key.state == SDL_PRESSED) {
-							if (state != GAME && state != EDITOR) {
-								state--;
-								if (state < GAME_PAUSED_ON_RESUME)
-									state = GAME_PAUSED_ON_QUIT;
+
+							switch (state) {
+								case MENU: break;
+								case GAME: break;
+								case PAUSED_ON_RESUME: state = PAUSED_ON_QUIT; break;
+								case PAUSED_ON_QUIT: state = PAUSED_ON_RESUME; break;
 							}
 						}
 						break;
@@ -114,10 +117,12 @@ int main() {
 					case SDL_SCANCODE_DOWN:
 
 						if (event.key.state == SDL_PRESSED) {
-							if (state != GAME && state != EDITOR) {
-								state++;
-								if (state > GAME_PAUSED_ON_QUIT)
-									state = GAME_PAUSED_ON_RESUME;
+							
+							switch (state) {
+								case MENU: break;
+								case GAME: break;
+								case PAUSED_ON_RESUME: state = PAUSED_ON_QUIT; break;
+								case PAUSED_ON_QUIT: state = PAUSED_ON_RESUME; break;
 							}
 						}
 						break;
@@ -126,13 +131,12 @@ int main() {
 					case SDL_SCANCODE_Z:
 
 						switch (state) {
+							case MENU: break;
 							case GAME:
-							case EDITOR:
 								// event.key.state == SDL_PRESSED
 								break;
-							case GAME_PAUSED_ON_RESUME: state = GAME; break;
-							case GAME_PAUSED_ON_EDIT: state = EDITOR; break;
-							case GAME_PAUSED_ON_QUIT: running = FALSE; break;
+							case PAUSED_ON_RESUME: state = GAME; break;
+							case PAUSED_ON_QUIT: running = FALSE; break;
 						}
 						break;
 
@@ -145,16 +149,13 @@ int main() {
 		SDL_SetRenderTarget(renderer, screen_buffer);
 		
 		// logic/rendering to screen_buffer
-		if (state == EDITOR || state == GAME) {
+		if (state == GAME) {
 
 			// clear screen_buffer to grey
 			SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
 			SDL_RenderClear(renderer);
 
-			if (state == GAME)
-				process_game(&input);
-			else
-				process_editor(&input);
+			process_game(&input);
 
 		} else {
 
@@ -162,9 +163,8 @@ int main() {
 			draw_bordered_rect(WIDTH / 2 - 100, HEIGHT / 2 - 120, 200, 240);
 			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 100, "Paused");
 
-			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 50, state == GAME_PAUSED_ON_RESUME ? "[Resume]" : "Resume");
-			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 10, state == GAME_PAUSED_ON_EDIT   ? "[Edit]"   : "Edit");
-			draw_text_centered(WIDTH / 2, HEIGHT / 2 + 30, state == GAME_PAUSED_ON_QUIT   ? "[Quit]"   : "Quit");
+			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 10, state == PAUSED_ON_RESUME ? "[Resume]" : "Resume");
+			draw_text_centered(WIDTH / 2, HEIGHT / 2 + 30, state == PAUSED_ON_QUIT   ? "[Quit]"   : "Quit");
 		}
 		
 		SDL_SetRenderTarget(renderer, NULL); 						// reset render target back to window
