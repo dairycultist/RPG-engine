@@ -204,16 +204,17 @@ void draw_text(int x, int y, const char *string) {
 	SDL_Texture* text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
 
 	SDL_Rect text_rect = { x, y };
-
 	TTF_SizeText(font, string, &text_rect.w, &text_rect.h);
 
 	SDL_RenderCopy(renderer, text_texture, NULL, &text_rect);
+
+	SDL_FreeSurface(text_surface);
+	SDL_DestroyTexture(text_texture);
 }
 
 void draw_text_centered(int x, int y, const char *string) {
 
 	int w;
-
 	TTF_SizeText(font, string, &w, NULL);
 
 	draw_text(x - (w / 2), y, string);
