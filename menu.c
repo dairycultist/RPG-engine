@@ -39,14 +39,14 @@ void init_menu() {
 
 void process_menu(const Input *input) {
 
-	draw_text(20, -20, "Quit");
+	draw_text(20, 0, "Quit");
 
 	for (int i=0; i<detected_data_count; i++) {
 
-		draw_text(20, 10 + i * 30, detected_data[i]);
+		draw_text(20, 30 + i * 30, detected_data[i]);
 	}
 
-	draw_text(0, 10 + selected * 30, ">");
+	draw_text(0, 30 + selected * 30, ">");
 	
 	if (input->up && input->up_edge) {
 
@@ -64,7 +64,7 @@ void process_menu(const Input *input) {
 			selected = 0;
 	}
 
-	if (input->select_edge) {
+	if (input->select && input->select_edge) {
 
 		if (selected == -1) {
 			signal_exit();

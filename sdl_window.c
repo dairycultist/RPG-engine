@@ -10,7 +10,7 @@ static SDL_Texture *screen_buffer;
 
 typedef enum {
 
-	MENU, GAME, PAUSED_ON_RESUME, PAUSED_ON_QUIT
+	MENU, GAME, PAUSED_ON_RESUME, PAUSED_ON_MENU
 
 } WindowState;
 
@@ -104,7 +104,7 @@ int main() {
 								case MENU: break;
 								case GAME: state = PAUSED_ON_RESUME; break;
 								case PAUSED_ON_RESUME:
-								case PAUSED_ON_QUIT: state = GAME; break;
+								case PAUSED_ON_MENU: state = GAME; break;
 							}
 						}
 						break;
@@ -117,8 +117,8 @@ int main() {
 								input.up      = event.key.state == SDL_PRESSED;
 								input.up_edge = TRUE;
 								break;
-							case PAUSED_ON_RESUME: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_QUIT; } break;
-							case PAUSED_ON_QUIT: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_RESUME; } break;
+							case PAUSED_ON_RESUME: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_MENU; } break;
+							case PAUSED_ON_MENU: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_RESUME; } break;
 						}
 						break;
 
@@ -130,8 +130,8 @@ int main() {
 								input.down      = event.key.state == SDL_PRESSED;
 								input.down_edge = TRUE;
 								break;
-							case PAUSED_ON_RESUME: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_QUIT; } break;
-							case PAUSED_ON_QUIT: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_RESUME; } break;
+							case PAUSED_ON_RESUME: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_MENU; } break;
+							case PAUSED_ON_MENU: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_RESUME; } break;
 						}
 						break;
 
@@ -145,7 +145,7 @@ int main() {
 								input.select_edge = TRUE;
 								break;
 							case PAUSED_ON_RESUME: state = GAME; break;
-							case PAUSED_ON_QUIT: running = FALSE; break;
+							case PAUSED_ON_MENU: destroy_game(); state = MENU; init_menu(); break;
 						}
 						break;
 
@@ -170,11 +170,11 @@ int main() {
 		} else {
 
 			// render the pause menu over the game
-			draw_bordered_rect(WIDTH / 2 - 100, HEIGHT / 2 - 100, 200, 200);
+			draw_bordered_rect(WIDTH / 2 - 150, HEIGHT / 2 - 90, 300, 180);
 			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 80, "Paused");
 
 			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 20, state == PAUSED_ON_RESUME ? "[Resume]" : "Resume");
-			draw_text_centered(WIDTH / 2, HEIGHT / 2 + 20, state == PAUSED_ON_QUIT   ? "[Quit]"   : "Quit");
+			draw_text_centered(WIDTH / 2, HEIGHT / 2 + 20, state == PAUSED_ON_MENU   ? "[Return to Menu]"   : "Return to Menu");
 		}
 		
 		SDL_SetRenderTarget(renderer, NULL); 						// reset render target back to window
