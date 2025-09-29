@@ -20,6 +20,7 @@ int main() {
 
 	printf("Opening RPG Engine...\n");
 
+	// initialize a lot of static stuff
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		printf("Error initializing SDL:\n%s\n", SDL_GetError());
 		return 1;
@@ -31,7 +32,6 @@ int main() {
 	}
 
 	font = TTF_OpenFont("OpenDyslexic.ttf", 24);
-	// TTF_CloseFont(font);
 
 	if (!font) {
 		printf("Error loading engine font 'OpenDyslexic.ttf'.");
@@ -60,7 +60,7 @@ int main() {
 
 	char running = TRUE;
 
-	// TODO maintain struct containing all the key/mouse info to pass to process functions (directions + select + back, with both pressed and just pressed)
+	Input input;
 
 	while (running) {
 
@@ -152,9 +152,9 @@ int main() {
 			SDL_RenderClear(renderer);
 
 			if (state == GAME)
-				process_game();
+				process_game(&input);
 			else
-				process_editor();
+				process_editor(&input);
 
 		} else {
 
@@ -174,6 +174,7 @@ int main() {
 		SDL_Delay(1000 / 60);
 	}
 
+	TTF_CloseFont(font);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
