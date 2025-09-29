@@ -59,7 +59,7 @@ int main() {
 
 	// process events until window is closed
 	SDL_Event event;
-	SDL_Rect letterbox = {0, 0, WIDTH * 2, HEIGHT * 2};
+	SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
 
 	char running = TRUE;
 
@@ -103,9 +103,17 @@ int main() {
 
 						if (event.key.state == SDL_PRESSED) {
 							state--;
-							if (state < GAME_PAUSED_ON_RESUME) {
+							if (state < GAME_PAUSED_ON_RESUME)
 								state = GAME_PAUSED_ON_QUIT;
-							}
+						}
+						break;
+
+					case SDL_SCANCODE_DOWN:
+
+						if (event.key.state == SDL_PRESSED) {
+							state++;
+							if (state > GAME_PAUSED_ON_QUIT)
+								state = GAME_PAUSED_ON_RESUME;
 						}
 						break;
 
