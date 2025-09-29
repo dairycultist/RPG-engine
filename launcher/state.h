@@ -9,6 +9,6 @@ typedef struct {
 
 } State;
 
-State *create_dialogue_state(unsigned int successor_index, const char *text);
+State *create_dialogue_state(int successor_index, const char *text);
 
 #endif

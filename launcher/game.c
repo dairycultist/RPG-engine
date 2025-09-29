@@ -5,8 +5,8 @@
 #include "state.h"
 
 static State **states;
-static unsigned int state_count;
-static unsigned int current_state_index;
+static int state_count;
+static int current_state_index;
 
 void init_game(const char *game_data_path) {
 
@@ -25,18 +25,18 @@ void init_game(const char *game_data_path) {
 
 	// read all the states
 	char flag[100] = {};
-	unsigned int state_index = 0;
+	int i = 0;
 
 	while (fscanf(file, "%99s", flag) != EOF) {
 
 		if (strcmp(flag, "#DIALOGUE") == 0) {
 
-			unsigned int successor_index;
+			int successor_index;
 			char text[2048] = {};
 
 			fscanf(file, "%u:\"%2047[^\"]\"", &successor_index, text);
 
-			states[state_index++] = create_dialogue_state(successor_index, text);
+			states[i++] = create_dialogue_state(successor_index, text);
 
 		} else if (strcmp(flag, "#COMMENT") == 0) {
 

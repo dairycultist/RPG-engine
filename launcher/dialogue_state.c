@@ -7,7 +7,7 @@ typedef struct {
 
 	State base_state;
 
-	unsigned int successor_index;
+	int successor_index;
 	char *text;
 
 } DialogueState;
@@ -30,7 +30,7 @@ static void destroy_dialogue_state(void *state) {
 	free(state);
 }
 
-State *create_dialogue_state(unsigned int successor_index, const char *text) {
+State *create_dialogue_state(int successor_index, const char *text) {
 
 	DialogueState *state = malloc(sizeof(DialogueState));
 
