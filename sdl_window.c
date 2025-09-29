@@ -86,6 +86,7 @@ int main() {
 				switch (event.key.keysym.scancode) {
 
 					case SDL_SCANCODE_ESCAPE:
+					case SDL_SCANCODE_C:
 
 						if (event.key.state == SDL_PRESSED) {
 							if (state == GAME) {
@@ -118,11 +119,17 @@ int main() {
 						}
 						break;
 
+					case SDL_SCANCODE_RETURN:
 					case SDL_SCANCODE_Z:
 
-						if (event.key.state == SDL_PRESSED)
-							if (state == GAME_PAUSED_ON_QUIT)
+						if (event.key.state == SDL_PRESSED) {
+							if (state == GAME_PAUSED_ON_RESUME)
+								state = GAME;
+							else if (state == GAME_PAUSED_ON_EDIT)
+								state = EDITOR;
+							else if (state == GAME_PAUSED_ON_QUIT)
 								running = FALSE;
+						}
 						break;
 
 					default: break;
