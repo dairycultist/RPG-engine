@@ -9,13 +9,13 @@
 
 typedef struct {
 
-	char up,     up_justnow;
-	char down,   down_justnow;
-	char left,   left_justnow;
-	char right,  right_justnow;
+	char up,     up_edge; // "edge," as in "just changed"
+	char down,   down_edge;
+	char left,   left_edge;
+	char right,  right_edge;
 
-	char select, select_justnow;
-	char cancel, cancel_justnow;
+	char select, select_edge;
+	char cancel, cancel_edge;
 
 } Input;
 

@@ -14,7 +14,7 @@ typedef enum {
 
 } WindowState;
 
-static WindowState state = MENU;
+static WindowState state;
 
 int main() {
 
@@ -54,6 +54,10 @@ int main() {
 
 	screen_buffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WIDTH, HEIGHT);
 
+	// initialize startup state
+	state = MENU;
+	init_menu();
+
 	// process events until window is closed
 	SDL_Event event;
 	SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
@@ -63,6 +67,13 @@ int main() {
 	Input input;
 
 	while (running) {
+
+		input.up_edge     = FALSE;
+		input.down_edge   = FALSE;
+		input.left_edge   = FALSE;
+		input.right_edge  = FALSE;
+		input.select_edge = FALSE;
+		input.cancel_edge = FALSE;
 
 		while (SDL_PollEvent(&event)) {
 
@@ -104,7 +115,8 @@ int main() {
 						switch (state) {
 							case MENU:
 							case GAME:
-								// event.key.state == SDL_PRESSED
+								input.up      = event.key.state == SDL_PRESSED;
+								input.up_edge = TRUE;
 								break;
 							case PAUSED_ON_RESUME: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_QUIT; } break;
 							case PAUSED_ON_QUIT: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_RESUME; } break;
@@ -116,7 +128,8 @@ int main() {
 						switch (state) {
 							case MENU:
 							case GAME:
-								// event.key.state == SDL_PRESSED
+								input.down      = event.key.state == SDL_PRESSED;
+								input.down_edge = TRUE;
 								break;
 							case PAUSED_ON_RESUME: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_QUIT; } break;
 							case PAUSED_ON_QUIT: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_RESUME; } break;
@@ -129,7 +142,8 @@ int main() {
 						switch (state) {
 							case MENU:
 							case GAME:
-								// event.key.state == SDL_PRESSED
+								input.select      = event.key.state == SDL_PRESSED;
+								input.select_edge = TRUE;
 								break;
 							case PAUSED_ON_RESUME: state = GAME; break;
 							case PAUSED_ON_QUIT: running = FALSE; break;
@@ -181,7 +195,9 @@ int main() {
 
 void start_game(const char *game_data_path) {
 
-	printf("loading from %s\n", game_data_path);
+	destroy_menu();
+	state = GAME;
+	init_game(game_data_path);
 }
 
 void draw_bordered_rect(int x, int y, int w, int h) {
