@@ -2,61 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include "sdl_window.h"
-
-typedef struct {
-
-	void (*process_state)(void *state, const Input *input); // all states start with these two functions (pseudo-inheritence through composition)
-	void (*destroy_state)(void *state);
-
-} State;
+#include "state.h"
 
 static State **states;
 static unsigned int state_count;
 static unsigned int current_state_index;
-
-
-
-typedef struct {
-
-	State base_state;
-
-	unsigned int successor_index;
-	char *text;
-
-} DialogueState;
-
-static void process_dialogue_state(void *state, const Input *input) {
-
-	draw_bordered_rect(0, HEIGHT / 2, WIDTH, HEIGHT / 2);
-	draw_text(10, 10 + HEIGHT / 2, ((DialogueState *) state)->text);
-
-	if (input->select && input->select_edge) {
-		current_state_index = ((DialogueState *) state)->successor_index;
-	}
-}
-
-static void destroy_dialogue_state(void *state) {
-
-	free(((DialogueState *) state)->text);
-	free(state);
-}
-
-static State *create_dialogue_state(unsigned int successor_index, const char *text) {
-
-	DialogueState *state = malloc(sizeof(DialogueState));
-
-	state->base_state.process_state = process_dialogue_state;
-	state->base_state.destroy_state = destroy_dialogue_state;
-
-	state->successor_index = successor_index;
-
-	state->text = malloc(sizeof(char) * (strlen(text) + 1));
-	strcpy(state->text, text);
-
-	return (State *) state;
-}
-
-
 
 void init_game(const char *game_data_path) {
 
@@ -102,7 +52,10 @@ void init_game(const char *game_data_path) {
 
 void process_game(const Input *input) {
 
-	states[current_state_index]->process_state(states[current_state_index], input);
+	int next_state_index = states[current_state_index]->process_state(states[current_state_index], input);
+
+	if (next_state_index != -1)
+		current_state_index = next_state_index;
 }
 
 void destroy_game() {
