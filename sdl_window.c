@@ -1,41 +1,15 @@
 
-// gcc sdl_window.c -lSDL2_image -lSDL2_ttf $(sdl2-config --cflags) $(sdl2-config --libs)
+// gcc sdl_window.c game.c editor.c -lSDL2_image -lSDL2_ttf $(sdl2-config --cflags) $(sdl2-config --libs)
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include "sdl_window.h"
 
 static TTF_Font* font;
 static SDL_Window *window;
 static SDL_Renderer *renderer;
 static SDL_Texture *screen_buffer;
-
-#define WIDTH 600
-#define HEIGHT 400
-
-#define TRUE 1
-#define FALSE 0
-
-void init_editor() {
-
-}
-
-void process_editor() {
-	
-}
-
-void init_game() {
-
-}
-
-void process_game() {
-
-}
-
-void draw_bordered_rect(int x, int y, int w, int h);
-
-void draw_text(int x, int y, const char *string);
-void draw_text_centered(int x, int y, const char *string);
 
 typedef enum {
 
@@ -59,7 +33,7 @@ int main() {
 		return 1;
 	}
 
-	font = TTF_OpenFont("OpenDyslexic.ttf", 20);
+	font = TTF_OpenFont("OpenDyslexic.ttf", 24);
 	// TTF_CloseFont(font);
 
 	if (!font) {
@@ -89,7 +63,7 @@ int main() {
 
 	char running = TRUE;
 
-	char key_up = FALSE; // will switch to a struct containing all the key info (directions + select + back, with both pressed and just pressed)
+	// TODO maintain struct containing all the key/mouse info to pass to process functions (directions + select + back, with both pressed and just pressed)
 
 	while (running) {
 
@@ -125,7 +99,15 @@ int main() {
 						}
 						break;
 
-					case SDL_SCANCODE_UP: key_up = event.key.state == SDL_PRESSED; break;
+					case SDL_SCANCODE_UP:
+
+						if (event.key.state == SDL_PRESSED) {
+							state--;
+							if (state < GAME_PAUSED_ON_RESUME) {
+								state = GAME_PAUSED_ON_QUIT;
+							}
+						}
+						break;
 
 					default: break;
 				}
@@ -150,8 +132,12 @@ int main() {
 		} else {
 
 			// render the pause menu over the game
-			draw_bordered_rect(WIDTH / 4, HEIGHT / 4, WIDTH / 2, HEIGHT / 2);
-			draw_text_centered(WIDTH / 2, HEIGHT / 2, "PAUSED");
+			draw_bordered_rect(WIDTH / 2 - 100, HEIGHT / 2 - 120, 200, 240);
+			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 100, "Paused");
+
+			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 50, state == GAME_PAUSED_ON_RESUME ? "[Resume]" : "Resume");
+			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 10, state == GAME_PAUSED_ON_EDIT   ? "[Edit]"   : "Edit");
+			draw_text_centered(WIDTH / 2, HEIGHT / 2 + 30, state == GAME_PAUSED_ON_QUIT   ? "[Quit]"   : "Quit");
 		}
 		
 		SDL_SetRenderTarget(renderer, NULL); 						// reset render target back to window
