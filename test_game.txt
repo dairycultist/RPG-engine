@@ -1,3 +1,4 @@
 0 2
 #DIALOGUE 1:"This is a dialogue! Please pick a choice!"
 #DIALOGUE 0:"I love apples!"
+#COMMENT "This is a comment, the game ignores it"

@@ -29,6 +29,11 @@ void init_game(const char *game_data_path) {
 			fscanf(file, "%u:\"%2047[^\"]\"", &successor_state, text);
 
 			printf("%s\n", text);
+
+		} else if (strcmp(flag, "#COMMENT") == 0) {
+
+			fscanf(file, "\"%*[^\"]\"");
+
 		}
 	}
 
@@ -36,8 +41,6 @@ void init_game(const char *game_data_path) {
 	// #DIALOGUE 1:"This is a dialogue! Please pick a choice!"
 
 	// #CHOICE 2 2:"Eat bacon!" 3:"Eat pancakes!"
-
-	// #COMMENT "This is a comment, the game ignores it"
 
 	fclose(file);
 }
