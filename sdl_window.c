@@ -89,10 +89,13 @@ int main() {
 					case SDL_SCANCODE_C:
 
 						if (event.key.state == SDL_PRESSED) {
-							if (state == GAME) {
-								state = GAME_PAUSED_ON_RESUME;
-							} else if (state == GAME_PAUSED_ON_RESUME || state == GAME_PAUSED_ON_EDIT || state == GAME_PAUSED_ON_QUIT) {
-								state = GAME;
+
+							switch (state) {
+								case GAME: state = GAME_PAUSED_ON_RESUME; break;
+								case EDITOR: break;
+								case GAME_PAUSED_ON_RESUME:
+								case GAME_PAUSED_ON_EDIT:
+								case GAME_PAUSED_ON_QUIT: state = GAME; break;
 							}
 						}
 						break;
