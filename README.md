@@ -5,7 +5,7 @@ A data-driven game engine for creating simple RPGs.
 ## TO-DO
 1. make a human-readable text format for dialogue and choices (core visual-novel components)
   - game data file has a "start state" entry so that the editor can test starting from arbitrary states
-2. make (i.e. convert my current code into) a simple launcher that reads that text file and plays the game (editor will come later)
+2. implement game.c (reads the aforementioned text file and plays the game) (editor will come later)
 
 ## Limitations
 - there's no "world map" to walk around in, so this is more of a visual novel engine but with battles/a party system
@@ -30,3 +30,8 @@ every asset is made in-engine (no importing, no filesystem). no tilemaps, mainly
 https://www.deviantart.com/shweetmagnet/art/2025-06-12-Natalie-5-1224856754
 
 steal SDL code from https://github.com/dairycultist/Berry2D/blob/main/src/window.c
+
+## Fonts
+https://www.dafont.com/vcr-osd-mono.font
+
+https://opendyslexic.org/

@@ -32,10 +32,10 @@ int main() {
 		return 1;
 	}
 
-	font = TTF_OpenFont("OpenDyslexic.ttf", 24);
+	font = TTF_OpenFont("VCR_MONO.ttf", 21);
 
 	if (!font) {
-		printf("Error loading engine font 'OpenDyslexic.ttf'.");
+		printf("Error loading engine font 'VCR_MONO.ttf'.");
 		return 1;
 	}
 
@@ -171,10 +171,10 @@ int main() {
 
 			// render the pause menu over the game
 			draw_bordered_rect(WIDTH / 2 - 150, HEIGHT / 2 - 90, 300, 180);
-			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 80, "Paused");
+			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 60, "Paused");
 
-			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 20, state == PAUSED_ON_RESUME ? "[Resume]" : "Resume");
-			draw_text_centered(WIDTH / 2, HEIGHT / 2 + 20, state == PAUSED_ON_MENU   ? "[Return to Menu]"   : "Return to Menu");
+			draw_text_centered(WIDTH / 2, HEIGHT / 2, state == PAUSED_ON_RESUME ? "[Resume]" : "Resume");
+			draw_text_centered(WIDTH / 2, HEIGHT / 2 + 40, state == PAUSED_ON_MENU   ? "[Return to Menu]"   : "Return to Menu");
 		}
 		
 		SDL_SetRenderTarget(renderer, NULL); 						// reset render target back to window
@@ -223,7 +223,7 @@ void draw_text(int x, int y, const char *string) {
 
 	static SDL_Color white = { 255, 255, 255 };
 
-	SDL_Surface* text_surface = TTF_RenderText_Blended(font, string, white);
+	SDL_Surface* text_surface = TTF_RenderText_Solid(font, string, white); // TTF_RenderText_Blended for AA
 	SDL_Texture* text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
 
 	SDL_Rect text_rect = { x, y };
