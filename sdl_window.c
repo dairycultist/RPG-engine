@@ -14,9 +14,7 @@ typedef enum {
 
 } WindowState;
 
-// TODO when first starting the program, enter a MENU state where you can choose between detected game data files
-
-static WindowState state = GAME;
+static WindowState state = MENU;
 
 int main() {
 
@@ -103,27 +101,25 @@ int main() {
 
 					case SDL_SCANCODE_UP:
 
-						if (event.key.state == SDL_PRESSED) {
-
-							switch (state) {
-								case MENU: break;
-								case GAME: break;
-								case PAUSED_ON_RESUME: state = PAUSED_ON_QUIT; break;
-								case PAUSED_ON_QUIT: state = PAUSED_ON_RESUME; break;
-							}
+						switch (state) {
+							case MENU:
+							case GAME:
+								// event.key.state == SDL_PRESSED
+								break;
+							case PAUSED_ON_RESUME: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_QUIT; } break;
+							case PAUSED_ON_QUIT: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_RESUME; } break;
 						}
 						break;
 
 					case SDL_SCANCODE_DOWN:
 
-						if (event.key.state == SDL_PRESSED) {
-							
-							switch (state) {
-								case MENU: break;
-								case GAME: break;
-								case PAUSED_ON_RESUME: state = PAUSED_ON_QUIT; break;
-								case PAUSED_ON_QUIT: state = PAUSED_ON_RESUME; break;
-							}
+						switch (state) {
+							case MENU:
+							case GAME:
+								// event.key.state == SDL_PRESSED
+								break;
+							case PAUSED_ON_RESUME: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_QUIT; } break;
+							case PAUSED_ON_QUIT: if (event.key.state == SDL_PRESSED) { state = PAUSED_ON_RESUME; } break;
 						}
 						break;
 
@@ -131,7 +127,7 @@ int main() {
 					case SDL_SCANCODE_Z:
 
 						switch (state) {
-							case MENU: break;
+							case MENU:
 							case GAME:
 								// event.key.state == SDL_PRESSED
 								break;
@@ -155,19 +151,17 @@ int main() {
 			SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
 			SDL_RenderClear(renderer);
 
-			if (state == MENU)
-				process_menu(&input);
-			else
-				process_game(&input);
+			// process appropriate state
+			state == MENU ? process_menu(&input) : process_game(&input);
 
 		} else {
 
 			// render the pause menu over the game
-			draw_bordered_rect(WIDTH / 2 - 100, HEIGHT / 2 - 120, 200, 240);
-			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 100, "Paused");
+			draw_bordered_rect(WIDTH / 2 - 100, HEIGHT / 2 - 100, 200, 200);
+			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 80, "Paused");
 
-			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 10, state == PAUSED_ON_RESUME ? "[Resume]" : "Resume");
-			draw_text_centered(WIDTH / 2, HEIGHT / 2 + 30, state == PAUSED_ON_QUIT   ? "[Quit]"   : "Quit");
+			draw_text_centered(WIDTH / 2, HEIGHT / 2 - 20, state == PAUSED_ON_RESUME ? "[Resume]" : "Resume");
+			draw_text_centered(WIDTH / 2, HEIGHT / 2 + 20, state == PAUSED_ON_QUIT   ? "[Quit]"   : "Quit");
 		}
 		
 		SDL_SetRenderTarget(renderer, NULL); 						// reset render target back to window
@@ -183,6 +177,11 @@ int main() {
 	SDL_Quit();
 
 	return 0;
+}
+
+void start_game(const char *game_data_path) {
+
+	printf("loading from %s\n", game_data_path);
 }
 
 void draw_bordered_rect(int x, int y, int w, int h) {
