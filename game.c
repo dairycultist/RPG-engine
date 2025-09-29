@@ -1,6 +1,6 @@
 #include "sdl_window.h"
 
-void init_game() {
+void init_game(const char *game_data_path) {
 
 }
 

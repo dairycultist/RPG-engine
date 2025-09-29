@@ -149,13 +149,16 @@ int main() {
 		SDL_SetRenderTarget(renderer, screen_buffer);
 		
 		// logic/rendering to screen_buffer
-		if (state == GAME) {
+		if (state == MENU || state == GAME) {
 
 			// clear screen_buffer to grey
 			SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
 			SDL_RenderClear(renderer);
 
-			process_game(&input);
+			if (state == MENU)
+				process_menu(&input);
+			else
+				process_game(&input);
 
 		} else {
 

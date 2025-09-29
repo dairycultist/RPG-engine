@@ -17,9 +17,6 @@ typedef struct {
 	char select, select_justnow;
 	char cancel, cancel_justnow;
 
-	char lmb,    lmb_justnow;
-	int mouse_x, mouse_y;
-
 } Input;
 
 /*
@@ -33,15 +30,15 @@ void draw_text_centered(int x, int y, const char *string);
 /*
  * game.c
  */
-void init_game(); // should take in game data file path (game data file has a "start state" entry so that the editor can test starting from arbitrary states)
+void init_game(const char *game_data_path);
 void process_game(const Input *input);
 void destroy_game();
 
 /*
- * editor.c
+ * menu.c
  */
-void init_editor(); // should take in game data file path
-void process_editor(const Input *input);
-void destroy_editor();
+void init_menu();
+void process_menu(const Input *input);
+void destroy_menu();
 
 #endif
