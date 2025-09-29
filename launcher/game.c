@@ -5,7 +5,7 @@
 
 typedef struct {
 
-	void (*process_state)(void *state, const Input *input); // all states start with these two functions
+	void (*process_state)(void *state, const Input *input); // all states start with these two functions (pseudo-inheritence through composition)
 	void (*destroy_state)(void *state);
 
 } State;
@@ -18,32 +18,35 @@ static unsigned int current_state_index;
 
 typedef struct {
 
-	void (*process_state)(void *state, const Input *input);
-	void (*destroy_state)(void *state);
+	State base_state;
 
 	unsigned int successor_index;
 	char *text;
 
 } DialogueState;
 
-void process_dialogue_state(void *state, const Input *input) {
+static void process_dialogue_state(void *state, const Input *input) {
 
 	draw_bordered_rect(0, HEIGHT / 2, WIDTH, HEIGHT / 2);
-	draw_text(0, 0, ((DialogueState *) state)->text);
+	draw_text(10, 10 + HEIGHT / 2, ((DialogueState *) state)->text);
+
+	if (input->select && input->select_edge) {
+		current_state_index = ((DialogueState *) state)->successor_index;
+	}
 }
 
-void destroy_dialogue_state(void *state) {
+static void destroy_dialogue_state(void *state) {
 
 	free(((DialogueState *) state)->text);
 	free(state);
 }
 
-State *create_dialogue_state(unsigned int successor_index, const char *text) {
+static State *create_dialogue_state(unsigned int successor_index, const char *text) {
 
 	DialogueState *state = malloc(sizeof(DialogueState));
 
-	state->process_state = process_dialogue_state;
-	state->destroy_state = destroy_dialogue_state;
+	state->base_state.process_state = process_dialogue_state;
+	state->base_state.destroy_state = destroy_dialogue_state;
 
 	state->successor_index = successor_index;
 
