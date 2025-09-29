@@ -9,16 +9,16 @@
 
 typedef struct {
 
-	char up,    up_justnow;
-	char down,  down_justnow;
-	char left,  left_justnow;
-	char right, right_justnow;
+	char up,     up_justnow;
+	char down,   down_justnow;
+	char left,   left_justnow;
+	char right,  right_justnow;
 
 	char select, select_justnow;
 	char cancel, cancel_justnow;
 
+	char lmb,    lmb_justnow;
 	int mouse_x, mouse_y;
-	int lmb, lmb_justnow;
 
 } Input;
 
@@ -33,7 +33,7 @@ void draw_text_centered(int x, int y, const char *string);
 /*
  * game.c
  */
-void init_game(); // should take in game data file path (and maybe a state index, if coming from the editor and selecting to start in the non-initial state for testing)
+void init_game(); // should take in game data file path (game data file has a "start state" entry so that the editor can test starting from arbitrary states)
 void process_game(const Input *input);
 void destroy_game();
 
