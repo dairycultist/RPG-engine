@@ -2,11 +2,6 @@
 
 A data-driven game engine for creating simple RPGs.
 
-## TO-DO
-1. make a human-readable text format for dialogue and choices (core visual-novel components)
-  - game data file has a "start state" entry so that the editor can test starting from arbitrary states
-2. implement game.c (reads the aforementioned text file and plays the game) (editor will come later)
-
 ## Limitations
 - there's no "world map" to walk around in, so this is more of a visual novel engine but with battles/a party system
 - no party system (enemies during combat "look out of the screen" like earthbound, since there's no point in a "face-to-face" system like pokemon if it's just you)
