@@ -34,6 +34,9 @@ void process_game() {
 
 void draw_bordered_rect(int x, int y, int w, int h);
 
+void draw_text(int x, int y, const char *string);
+void draw_text_centered(int x, int y, const char *string);
+
 typedef enum {
 
 	GAME, GAME_PAUSED_ON_RESUME, GAME_PAUSED_ON_EDIT, GAME_PAUSED_ON_QUIT, EDITOR
@@ -79,18 +82,6 @@ int main() {
 	}
 
 	screen_buffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WIDTH, HEIGHT);
-
-	// pre-render pause menu text
-	SDL_Color white = {255, 255, 255};
-
-	SDL_Surface* text_surface = TTF_RenderText_Blended(font, "paused", white);
-	SDL_Texture* text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
-
-	SDL_Rect text_rect;
-	text_rect.x = 20;
-	text_rect.y = 20;
-
-	TTF_SizeText(font, "paused", &text_rect.w, &text_rect.h);
 
 	// process events until window is closed
 	SDL_Event event;
@@ -159,9 +150,8 @@ int main() {
 		} else {
 
 			// render the pause menu over the game
-			draw_bordered_rect(0, 0, 200, 200);
-
-			SDL_RenderCopy(renderer, text_texture, NULL, &text_rect);
+			draw_bordered_rect(WIDTH / 4, HEIGHT / 4, WIDTH / 2, HEIGHT / 2);
+			draw_text_centered(WIDTH / 2, HEIGHT / 2, "PAUSED");
 		}
 		
 		SDL_SetRenderTarget(renderer, NULL); 						// reset render target back to window
@@ -191,4 +181,27 @@ void draw_bordered_rect(int x, int y, int w, int h) {
 	rect.w -= 2;
 	rect.h -= 2;
 	SDL_RenderDrawRect(renderer, &rect);
+}
+
+void draw_text(int x, int y, const char *string) {
+
+	static SDL_Color white = { 255, 255, 255 };
+
+	SDL_Surface* text_surface = TTF_RenderText_Blended(font, string, white);
+	SDL_Texture* text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
+
+	SDL_Rect text_rect = { x, y };
+
+	TTF_SizeText(font, string, &text_rect.w, &text_rect.h);
+
+	SDL_RenderCopy(renderer, text_texture, NULL, &text_rect);
+}
+
+void draw_text_centered(int x, int y, const char *string) {
+
+	int w;
+
+	TTF_SizeText(font, string, &w, NULL);
+
+	draw_text(x - (w / 2), y, string);
 }
