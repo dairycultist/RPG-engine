@@ -1,6 +1,3 @@
-
-// gcc sdl_window.c game.c editor.c -lSDL2_image -lSDL2_ttf $(sdl2-config --cflags) $(sdl2-config --libs)
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -102,19 +99,30 @@ int main() {
 					case SDL_SCANCODE_UP:
 
 						if (event.key.state == SDL_PRESSED) {
-							state--;
-							if (state < GAME_PAUSED_ON_RESUME)
-								state = GAME_PAUSED_ON_QUIT;
+							if (state != GAME && state != EDITOR) {
+								state--;
+								if (state < GAME_PAUSED_ON_RESUME)
+									state = GAME_PAUSED_ON_QUIT;
+							}
 						}
 						break;
 
 					case SDL_SCANCODE_DOWN:
 
 						if (event.key.state == SDL_PRESSED) {
-							state++;
-							if (state > GAME_PAUSED_ON_QUIT)
-								state = GAME_PAUSED_ON_RESUME;
+							if (state != GAME && state != EDITOR) {
+								state++;
+								if (state > GAME_PAUSED_ON_QUIT)
+									state = GAME_PAUSED_ON_RESUME;
+							}
 						}
+						break;
+
+					case SDL_SCANCODE_Z:
+
+						if (event.key.state == SDL_PRESSED)
+							if (state == GAME_PAUSED_ON_QUIT)
+								running = FALSE;
 						break;
 
 					default: break;

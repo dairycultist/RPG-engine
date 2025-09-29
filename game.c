@@ -7,3 +7,7 @@ void init_game() {
 void process_game() {
 
 }
+
+void destroy_game() {
+
+}

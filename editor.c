@@ -7,3 +7,7 @@ void init_editor() {
 void process_editor() {
 	
 }
+
+void destroy_editor() {
+	
+}
