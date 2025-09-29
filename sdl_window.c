@@ -5,6 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
+static TTF_Font* font;
 static SDL_Window *window;
 static SDL_Renderer *renderer;
 static SDL_Texture *screen_buffer;
@@ -31,6 +32,8 @@ void process_game() {
 
 }
 
+void draw_bordered_rect(int x, int y, int w, int h);
+
 typedef enum {
 
 	GAME, GAME_PAUSED_ON_RESUME, GAME_PAUSED_ON_EDIT, GAME_PAUSED_ON_QUIT, EDITOR
@@ -53,7 +56,7 @@ int main() {
 		return 1;
 	}
 
-	TTF_Font* font = TTF_OpenFont("OpenDyslexic.ttf", 20);
+	font = TTF_OpenFont("OpenDyslexic.ttf", 20);
 	// TTF_CloseFont(font);
 
 	if (!font) {
@@ -137,12 +140,15 @@ int main() {
 				}
 			}
 		}
+
+		// set render target to screen_buffer
+		SDL_SetRenderTarget(renderer, screen_buffer);
 		
 		// logic/rendering to screen_buffer
 		if (state == EDITOR || state == GAME) {
 
-			SDL_SetRenderTarget(renderer, screen_buffer); 		// set render target to screen_buffer
-			SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255); 	// clear screen_buffer to grey
+			// clear screen_buffer to grey
+			SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
 			SDL_RenderClear(renderer);
 
 			if (state == GAME)
@@ -153,8 +159,10 @@ int main() {
 		} else {
 
 			// render the pause menu over the game
+			draw_bordered_rect(0, 0, 200, 200);
+
+			SDL_RenderCopy(renderer, text_texture, NULL, &text_rect);
 		}
-		SDL_RenderCopy(renderer, text_texture, NULL, &text_rect);
 		
 		SDL_SetRenderTarget(renderer, NULL); 						// reset render target back to window
 		SDL_RenderCopy(renderer, screen_buffer, NULL, &letterbox); 	// render screen_buffer
@@ -168,4 +176,19 @@ int main() {
 	SDL_Quit();
 
 	return 0;
+}
+
+void draw_bordered_rect(int x, int y, int w, int h) {
+
+	SDL_Rect rect = { x, y, w, h };
+
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderFillRect(renderer, &rect);
+	SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+	SDL_RenderDrawRect(renderer, &rect);
+	rect.x++;
+	rect.y++;
+	rect.w -= 2;
+	rect.h -= 2;
+	SDL_RenderDrawRect(renderer, &rect);
 }
