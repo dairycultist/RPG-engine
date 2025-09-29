@@ -50,18 +50,14 @@ void process_menu(const Input *input) {
 	
 	if (input->up && input->up_edge) {
 
-		selected--;
-
-		if (selected < -1)
+		if (--selected < -1)
 			selected = detected_data_count - 1;
 	}
 
 	if (input->down && input->down_edge) {
-		
-		selected++;
 
-		if (selected >= detected_data_count)
-			selected = 0;
+		if (++selected >= detected_data_count)
+			selected = -1;
 	}
 
 	if (input->select && input->select_edge) {
