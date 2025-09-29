@@ -6,13 +6,13 @@
 
 static char **detected_data;
 static int detected_data_count;
-static int selected_data;
+static int selected;
 
 void init_menu() {
 
 	detected_data = malloc(sizeof(char *) * 100);
 	detected_data_count = 0;
-	selected_data = 0;
+	selected = 0;
 
 	DIR *root_dir = opendir(".");
     struct dirent *dir;
@@ -39,31 +39,39 @@ void init_menu() {
 
 void process_menu(const Input *input) {
 
+	draw_text(20, -20, "Quit");
+
 	for (int i=0; i<detected_data_count; i++) {
 
 		draw_text(20, 10 + i * 30, detected_data[i]);
 	}
 
-	draw_text(0, 10 + selected_data * 30, ">");
+	draw_text(0, 10 + selected * 30, ">");
 	
 	if (input->up && input->up_edge) {
 
-		selected_data--;
+		selected--;
 
-		if (selected_data < 0)
-			selected_data = detected_data_count - 1;
+		if (selected < -1)
+			selected = detected_data_count - 1;
 	}
 
 	if (input->down && input->down_edge) {
 		
-		selected_data++;
+		selected++;
 
-		if (selected_data >= detected_data_count)
-			selected_data = 0;
+		if (selected >= detected_data_count)
+			selected = 0;
 	}
 
-	if (input->select_edge)
-		start_game(detected_data[selected_data]);
+	if (input->select_edge) {
+
+		if (selected == -1) {
+			signal_exit();
+		} else {
+			signal_start_game(detected_data[selected]);
+		}
+	}
 }
 
 void destroy_menu() {

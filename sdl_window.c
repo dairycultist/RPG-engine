@@ -15,6 +15,7 @@ typedef enum {
 } WindowState;
 
 static WindowState state;
+static char running = TRUE;
 
 int main() {
 
@@ -61,8 +62,6 @@ int main() {
 	// process events until window is closed
 	SDL_Event event;
 	SDL_Rect letterbox = { 0, 0, WIDTH * 2, HEIGHT * 2 };
-
-	char running = TRUE;
 
 	Input input;
 
@@ -193,11 +192,16 @@ int main() {
 	return 0;
 }
 
-void start_game(const char *game_data_path) {
+void signal_start_game(const char *game_data_path) {
 
 	destroy_menu();
 	state = GAME;
 	init_game(game_data_path);
+}
+
+void signal_exit() {
+
+	running = FALSE;
 }
 
 void draw_bordered_rect(int x, int y, int w, int h) {

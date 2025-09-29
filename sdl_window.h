@@ -22,7 +22,8 @@ typedef struct {
 /*
  * sdl_window.c
  */
-void start_game(const char *game_data_path); // used by menu.c
+void signal_start_game(const char *game_data_path); // used by menu.c
+void signal_exit();
 
 void draw_bordered_rect(int x, int y, int w, int h);
 
