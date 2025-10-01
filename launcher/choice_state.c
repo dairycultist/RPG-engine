@@ -7,7 +7,7 @@ typedef struct {
 
 	State base_state;
 
-	char *text;
+	char *prompt;
 	int choice_count;
 	char **choice_texts;
 	int *choice_successors;
@@ -19,7 +19,7 @@ static int selected_choice = 0;
 static int process_choice_state(void *state, const Input *input) {
 
 	draw_bordered_rect(0, HEIGHT / 2, WIDTH, HEIGHT / 2);
-	draw_text(10, 10 + HEIGHT / 2, ((ChoiceState *) state)->text);
+	draw_text(10, 10 + HEIGHT / 2, ((ChoiceState *) state)->prompt);
 
 	// TODO display all choices (currently just selected cuz ez)
 	draw_text(10, 50 + HEIGHT / 2, ((ChoiceState *) state)->choice_texts[selected_choice]);
@@ -47,22 +47,22 @@ static void destroy_choice_state(void *state) {
 	for (int i=0; i<((ChoiceState *) state)->choice_count; i++)
 		free(((ChoiceState *) state)->choice_texts[i]);
 
-	free(((ChoiceState *) state)->text);
+	free(((ChoiceState *) state)->prompt);
 	free(((ChoiceState *) state)->choice_texts);
 	free(((ChoiceState *) state)->choice_successors);
 
 	free(state);
 }
 
-State *create_choice_state(const char *text, int choice_count, char **choice_texts, int *choice_successors) {
+State *create_choice_state(const char *prompt, int choice_count, char **choice_texts, int *choice_successors) {
 
 	ChoiceState *state = malloc(sizeof(ChoiceState));
 
 	state->base_state.process_state = process_choice_state;
 	state->base_state.destroy_state = destroy_choice_state;
 
-	state->text = malloc(sizeof(char) * (strlen(text) + 1));
-	strcpy(state->text, text);
+	state->prompt = malloc(sizeof(char) * (strlen(prompt) + 1));
+	strcpy(state->prompt, prompt);
 
 	state->choice_count = choice_count;
 	state->choice_texts = choice_texts;
