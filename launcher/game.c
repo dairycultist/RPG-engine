@@ -18,7 +18,11 @@ int init_game(const char *game_data_path) {
 	}
 
 	// read start state and total state count
-	fscanf(file, "%u %u", &current_state_index, &state_count);
+	if (fscanf(file, "%u %u", &current_state_index, &state_count) != 2) {
+
+		fclose(file);
+		return FALSE;
+	}
 
 	// allocate space for the states
 	states = malloc(sizeof(State *) * state_count);
@@ -26,8 +30,27 @@ int init_game(const char *game_data_path) {
 	// read all the states
 	char flag[100] = {};
 	int i = 0;
+	int scanned;
 
-	while (fscanf(file, "%99s", flag) != EOF) {
+	while (TRUE) {
+
+		scanned = fscanf(file, "%99s", flag);
+
+		if (scanned == EOF) {
+
+			fclose(file);
+			return TRUE;
+		}
+
+		if (scanned != 1 || ferror(file)) {
+
+			for (int state=0; state<i; state++)
+				states[state]->destroy_state(states[state]);
+			free(states);
+			fclose(file);
+
+			return FALSE;
+		}
 
 		if (strcmp(flag, "#COMMENT") == 0) {
 
@@ -66,10 +89,6 @@ int init_game(const char *game_data_path) {
 			states[i++] = create_choice_state(prompt, choice_count, choice_texts, choice_successors);
 		}
 	}
-
-	fclose(file);
-
-	return TRUE;
 }
 
 void process_game(const Input *input) {
