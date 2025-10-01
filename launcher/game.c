@@ -46,18 +46,23 @@ void init_game(const char *game_data_path) {
 
 		} else if (strcmp(flag, "#CHOICE") == 0) {
 
-			// #CHOICE <choice_count> <succ_1>:"<text_1>" <succ_2>:"<text_2>" ...
+			// #CHOICE "<text>" <choice_count> <succ_1>:"<text_1>" <succ_2>:"<text_2>" ...
 
+			char text[2048] = {};
 			int choice_count;
 
-			fscanf(file, "%u", &choice_count);
+			fscanf(file, "%u \"%2047[^\"]\"", &choice_count, text);
+
+			printf("%s\n", text);
 
 			for (int choice = 0; choice < choice_count; choice++) {
 
 				fscanf(file, "%*u:\"%*2047[^\"]\"");
 			}
 
-			states[i++] = create_dialogue_state(2, "this should be a choice state but those aren't implemented yet!");
+			// State *create_choice_state(const char *text, int choice_count, char **choice_texts, int *choice_successors);
+
+			states[i++] = create_dialogue_state(2, text);
 		}
 	}
 

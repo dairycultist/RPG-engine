@@ -1,6 +1,6 @@
 0 2
-#DIALOGUE 1:"This is a dialogue! Please pick a choice!"
-#CHOICE 2 2:"Eat bacon!" 3:"Eat pancakes!"
+#DIALOGUE 1:"This is a dialogue!"
+#CHOICE 2 "Please pick a choice!" 2:"Eat bacon!" 3:"Eat pancakes!"
 #COMMENT "This is a comment, it is ignored and isn't included in the state count"
 #DIALOGUE 0:"You like bacon!"
 #DIALOGUE 0:"You like pancakes!"
