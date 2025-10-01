@@ -21,9 +21,13 @@ static int process_choice_state(void *state, const Input *input) {
 	draw_bordered_rect(0, HEIGHT / 2, WIDTH, HEIGHT / 2);
 	draw_text(10, 10 + HEIGHT / 2, ((ChoiceState *) state)->prompt);
 
-	// TODO display all choices (currently just selected cuz ez)
-	draw_text(10, 50 + HEIGHT / 2, ((ChoiceState *) state)->choice_texts[selected_choice]);
+	// display all choices
+	for (int i=0; i<((ChoiceState *) state)->choice_count; i++)
+		draw_text(30, 50 + HEIGHT / 2 + i * 30, ((ChoiceState *) state)->choice_texts[i]);
 
+	draw_text(10, 50 + HEIGHT / 2 + selected_choice * 30, ">");
+
+	// input
 	if (input->select && input->select_edge) {
 
 		int successor = ((ChoiceState *) state)->choice_successors[selected_choice];
