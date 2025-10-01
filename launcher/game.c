@@ -35,21 +35,21 @@ void init_game(const char *game_data_path) {
 
 		}else if (strcmp(flag, "#DIALOGUE") == 0) {
 
-			// #DIALOGUE <successor_index>:"<text>"
+			// #DIALOGUE <successor_index>:"<message>"
 
 			int successor_index;
-			char text[2048] = {};
+			char *message = malloc(sizeof(char) * 2048);
 
-			fscanf(file, "%u:\"%2047[^\"]\"", &successor_index, text);
+			fscanf(file, "%u:\"%2047[^\"]\"", &successor_index, message);
 
-			states[i++] = create_dialogue_state(successor_index, text);
+			states[i++] = create_dialogue_state(successor_index, message);
 
 		} else if (strcmp(flag, "#CHOICE") == 0) {
 
-			// #CHOICE "<prompt>" <choice_count> <succ_1>:"<text_1>" <succ_2>:"<text_2>" ...
+			// #CHOICE <choice_count> "<prompt>" <succ_1>:"<text_1>" <succ_2>:"<text_2>" ...
 
-			char prompt[2048] = {};
 			int choice_count;
+			char *prompt = malloc(sizeof(char) * 2048);
 
 			fscanf(file, "%u \"%2047[^\"]\"", &choice_count, prompt);
 

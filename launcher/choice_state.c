@@ -54,16 +54,14 @@ static void destroy_choice_state(void *state) {
 	free(state);
 }
 
-State *create_choice_state(const char *prompt, int choice_count, char **choice_texts, int *choice_successors) {
+State *create_choice_state(char *prompt, int choice_count, char **choice_texts, int *choice_successors) {
 
 	ChoiceState *state = malloc(sizeof(ChoiceState));
 
 	state->base_state.process_state = process_choice_state;
 	state->base_state.destroy_state = destroy_choice_state;
 
-	state->prompt = malloc(sizeof(char) * (strlen(prompt) + 1));
-	strcpy(state->prompt, prompt);
-
+	state->prompt = prompt;
 	state->choice_count = choice_count;
 	state->choice_texts = choice_texts;
 	state->choice_successors = choice_successors;

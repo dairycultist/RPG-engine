@@ -30,7 +30,7 @@ static void destroy_dialogue_state(void *state) {
 	free(state);
 }
 
-State *create_dialogue_state(int successor_index, const char *text) {
+State *create_dialogue_state(int successor_index, char *text) {
 
 	DialogueState *state = malloc(sizeof(DialogueState));
 
@@ -38,9 +38,7 @@ State *create_dialogue_state(int successor_index, const char *text) {
 	state->base_state.destroy_state = destroy_dialogue_state;
 
 	state->successor_index = successor_index;
-
-	state->text = malloc(sizeof(char) * (strlen(text) + 1));
-	strcpy(state->text, text);
+	state->text = text;
 
 	return (State *) state;
 }
