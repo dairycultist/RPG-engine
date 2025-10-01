@@ -8,13 +8,13 @@ static State **states;
 static int state_count;
 static int current_state_index;
 
-void init_game(const char *game_data_path) {
+int init_game(const char *game_data_path) {
 
 	FILE *file = fopen(game_data_path, "r");
 
 	if (!file) {
 		printf("Could not open game file!\n");
-		return;
+		return FALSE;
 	}
 
 	// read start state and total state count
@@ -38,7 +38,7 @@ void init_game(const char *game_data_path) {
 			// #DIALOGUE <successor_index>:"<message>"
 
 			int successor_index;
-			char *message = malloc(sizeof(char) * 2048);
+			char *message = calloc(2048, sizeof(char));
 
 			fscanf(file, "%u:\"%2047[^\"]\"", &successor_index, message);
 
@@ -49,7 +49,7 @@ void init_game(const char *game_data_path) {
 			// #CHOICE <choice_count> "<prompt>" <succ_1>:"<text_1>" <succ_2>:"<text_2>" ...
 
 			int choice_count;
-			char *prompt = malloc(sizeof(char) * 2048);
+			char *prompt = calloc(2048, sizeof(char));
 
 			fscanf(file, "%u \"%2047[^\"]\"", &choice_count, prompt);
 
@@ -58,7 +58,7 @@ void init_game(const char *game_data_path) {
 
 			for (int choice = 0; choice < choice_count; choice++) {
 
-				choice_texts[choice] = malloc(sizeof(char) * 2048);
+				choice_texts[choice] = calloc(2048, sizeof(char));
 
 				fscanf(file, "%u:\"%2047[^\"]\"", &choice_successors[choice], choice_texts[choice]);
 			}
@@ -68,6 +68,8 @@ void init_game(const char *game_data_path) {
 	}
 
 	fclose(file);
+
+	return TRUE;
 }
 
 void process_game(const Input *input) {

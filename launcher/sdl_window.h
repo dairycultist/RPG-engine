@@ -33,7 +33,7 @@ void draw_text_centered(int x, int y, const char *string);
 /*
  * game.c
  */
-void init_game(const char *game_data_path);
+int init_game(const char *game_data_path); // returns FALSE if failed to load from path (will automatically clean up after itself)
 void process_game(const Input *input);
 void destroy_game();
 
