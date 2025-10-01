@@ -10,5 +10,6 @@ typedef struct {
 } State;
 
 State *create_dialogue_state(int successor_index, const char *text);
+State *create_choice_state(const char *text, int choice_count, char **choice_texts, int *choice_successors);
 
 #endif
