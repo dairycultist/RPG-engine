@@ -18,7 +18,7 @@ int init_game(const char *game_data_path) {
 	}
 
 	// read start state and total state count
-	if (fscanf(file, "%u %u", &current_state_index, &state_count) != 2) {
+	if (fscanf(file, "%i %i", &current_state_index, &state_count) != 2) {
 
 		fclose(file);
 		return FALSE;
@@ -63,7 +63,7 @@ int init_game(const char *game_data_path) {
 			int successor_index;
 			char *message = calloc(2048, sizeof(char));
 
-			fscanf(file, "%u:\"%2047[^\"]\"", &successor_index, message);
+			fscanf(file, "%i:\"%2047[^\"]\"", &successor_index, message);
 
 			states[i++] = create_dialogue_state(successor_index, message);
 
@@ -74,7 +74,7 @@ int init_game(const char *game_data_path) {
 			int choice_count;
 			char *prompt = calloc(2048, sizeof(char));
 
-			fscanf(file, "%u \"%2047[^\"]\"", &choice_count, prompt);
+			fscanf(file, "%i \"%2047[^\"]\"", &choice_count, prompt);
 
 			char **choice_texts = malloc(sizeof(char *) * choice_count);
 			int *choice_successors = malloc(sizeof(int *) * choice_count);
@@ -83,7 +83,7 @@ int init_game(const char *game_data_path) {
 
 				choice_texts[choice] = calloc(2048, sizeof(char));
 
-				fscanf(file, "%u:\"%2047[^\"]\"", &choice_successors[choice], choice_texts[choice]);
+				fscanf(file, "%i:\"%2047[^\"]\"", &choice_successors[choice], choice_texts[choice]);
 			}
 
 			states[i++] = create_choice_state(prompt, choice_count, choice_texts, choice_successors);

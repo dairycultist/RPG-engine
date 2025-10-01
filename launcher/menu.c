@@ -75,3 +75,8 @@ void destroy_menu() {
 	
 	free(detected_data);
 }
+
+void report_corrupt_to_menu() {
+
+	strcpy(detected_data[selected], "<corrupted>");
+}

@@ -201,6 +201,9 @@ void signal_start_game(const char *game_data_path) {
 		// destroying menu second, because game_data_path is part of menu's data
 		// also we don't know ahead of time if the game data is legit or not
 		destroy_menu();
+
+	} else {
+		report_corrupt_to_menu();
 	}
 }
 

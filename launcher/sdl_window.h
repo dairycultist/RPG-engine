@@ -43,5 +43,6 @@ void destroy_game();
 void init_menu();
 void process_menu(const Input *input);
 void destroy_menu();
+void report_corrupt_to_menu(); // when sdl_window.c tries to load a game, but fails, this is called to report that to the front-end
 
 #endif
