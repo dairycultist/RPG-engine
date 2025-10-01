@@ -194,9 +194,11 @@ int main() {
 
 void signal_start_game(const char *game_data_path) {
 
-	destroy_menu();
 	state = GAME;
 	init_game(game_data_path);
+
+	// destroying menu second, because game_data_path is part of menu's data
+	destroy_menu();
 }
 
 void signal_exit() {
