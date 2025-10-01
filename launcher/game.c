@@ -77,7 +77,7 @@ int init_game(const char *game_data_path) {
 			fscanf(file, "%i \"%2047[^\"]\"", &choice_count, prompt);
 
 			char **choice_texts = malloc(sizeof(char *) * choice_count);
-			int *choice_successors = malloc(sizeof(int *) * choice_count);
+			int *choice_successors = malloc(sizeof(int) * choice_count);
 
 			for (int choice = 0; choice < choice_count; choice++) {
 
